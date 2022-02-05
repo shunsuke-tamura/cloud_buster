@@ -47,7 +47,7 @@ export default {
       this.isLoading = true
       const res = await axios("/getWordList")
       const wordList = res.data.data
-      console.log(wordList)
+      this.$store.commit("setWordList", wordList)
       this.isLoading = false
       this.start = true
     }
