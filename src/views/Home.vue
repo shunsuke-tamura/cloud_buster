@@ -1,15 +1,114 @@
 <template>
-  <hello-world />
+  <div id="game-window">
+    <div id="enemy-container">
+      <div id="enemy"></div>
+      <div id="enemy-status"></div>
+    </div>
+    <div id="player-container">
+      <div id="player"></div>
+      <div id="player-status"></div>
+    </div>
+    <div id="sys-msg"></div>
+    <div id="selection-container">
+      <div id="lu">左上</div>
+      <div id="ru">右上</div>
+      <div id="ld">左下</div>
+      <div id="rd">右下</div>
+    </div>
+  </div>
 </template>
 
 <script>
-  import HelloWorld from '../components/HelloWorld'
+export default {
+  name: 'Home',
 
-  export default {
-    name: 'Home',
-
-    components: {
-      HelloWorld,
-    },
-  }
+  components: {
+  },
+}
 </script>
+
+<style>
+#game-window {
+  border: 4px solid;
+  margin: 50px auto 0 auto;
+  width: 500px;
+  height: 580px;
+}
+
+#enemy-container {
+  display: grid;
+  grid-template-columns: 236px 256px;
+  grid-template-rows: 70px, 70px;
+}
+#enemy {
+  border: 3px solid;
+  grid-column: 2;
+  grid-row: 1 / 2;
+  margin: 10px 10px 0px 0px;
+  width: 250px;
+  height: 140px;
+}
+#enemy-status {
+  border: 3px solid;
+  grid-column: 1;
+  grid-row: 1;
+  margin: 30px 2px auto auto;
+  width: 200px;
+  height: 60px;
+}
+
+#player-container {
+  display: grid;
+  grid-template-columns: 256px 236px;
+  grid-template-rows: 70px, 70px;
+}
+#player {
+  border: 3px solid;
+  grid-column: 1;
+  grid-row: 1 / 2;
+  margin: 5px 0px 0px 10px;
+  width: 250px;
+  height: 140px;
+}
+#player-status {
+  border: 3px solid;
+  grid-column: 2;
+  grid-row: 1;
+  margin: 70px auto auto 6px;
+  width: 200px;
+  height: 60px;
+}
+
+#sys-msg {
+  border: 3px solid;
+  margin: 10px 10px auto 10px;
+  height: 65px;
+}
+
+/*grid*/
+#selection-container {
+  display: grid;
+  grid-template-columns: 246px 246px;
+  grid-template-rows: 100px 100px;
+}
+#lu {
+  border: 3px solid;
+  grid-row: 1; grid-column: 1;
+  margin: 10px 2.5px 2.5px 10px;
+}
+#ru {
+  border: 3px solid;
+  grid-row: 1; grid-column: 2;
+  margin: 10px 10px 2.5px 2.5px;
+}
+#ld {
+  border: 3px solid;
+  grid-row: 2; grid-column: 1;
+  margin: 2.5px 2.5px 10px 10px;
+}
+#rd {
+  border: 3px solid;
+  grid-row: 2; grid-column: 2;
+  margin: 2.5px 10px 10px 2.5px;
+}
+</style>
