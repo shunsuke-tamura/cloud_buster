@@ -15,11 +15,15 @@
     <div id="game-window" v-else>
       <div id="enemy-container">
         <div id="enemy"></div>
-        <div id="enemy-status"></div>
+        <div id="enemy-status">
+          <status class="status-details" :side="'enemy'" />
+        </div>
       </div>
       <div id="player-container">
         <div id="player"></div>
-        <div id="player-status"></div>
+        <div id="player-status">
+          <status class="status-details" :side="'player'" />
+        </div>
       </div>
       <div id="sys-msg"></div>
       <selection />
@@ -30,11 +34,13 @@
 <script>
 import axios from "axios"
 import Selection from '../components/Selection.vue'
+import Status from '../components/Status.vue'
 export default {
   name: 'Home',
 
   components: {
-    Selection
+    Selection,
+    Status,
   },
   data() {
     return {
@@ -120,6 +126,11 @@ export default {
   margin: 70px auto auto 6px;
   width: 200px;
   height: 60px;
+}
+
+.status-details {
+  width: 100%;
+  height: 100%;
 }
 
 #sys-msg {

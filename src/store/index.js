@@ -24,7 +24,10 @@ export default new Vuex.Store({
     atack(state, cloud) {
       if (cloud == state.enemy_status.cloud) {
         console.log(state.damage[cloud]);
-        state.enemy_status.HP += state.damage[cloud]
+        state.enemy_status.HP = (state.enemy_status.HP + state.damage[cloud])
+        if (state.enemy_status.HP > 20) {
+          state.enemy_status.HP = 20
+        }
         this.atack_res = "faild"
       }
       else if (cloud == "Azure") {
