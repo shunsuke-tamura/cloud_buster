@@ -1,33 +1,79 @@
 <template>
-  <div id="game-window">
-    <div id="enemy-container">
-      <div id="enemy"></div>
-      <div id="enemy-status"></div>
+  <div>
+    <div id="start-window" v-if="!start">
+      <v-btn
+        id="start"
+        color="primary"
+        elevation="15"
+        x-large
+        :loading=isLoading
+        @click="click_start()"
+      > 
+        start
+      </v-btn>
     </div>
-    <div id="player-container">
-      <div id="player"></div>
-      <div id="player-status"></div>
-    </div>
-    <div id="sys-msg"></div>
-    <div id="selection-container">
-      <div id="lu">左上</div>
-      <div id="ru">右上</div>
-      <div id="ld">左下</div>
-      <div id="rd">右下</div>
+    <div id="game-window" v-else>
+      <div id="enemy-container">
+        <div id="enemy"></div>
+        <div id="enemy-status"></div>
+      </div>
+      <div id="player-container">
+        <div id="player"></div>
+        <div id="player-status"></div>
+      </div>
+      <div id="sys-msg"></div>
+      <div id="selection-container">
+        <div id="lu">左上</div>
+        <div id="ru">右上</div>
+        <div id="ld">左下</div>
+        <div id="rd">右下</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios"
 export default {
   name: 'Home',
 
   components: {
   },
+  data() {
+    return {
+      start: false,
+      isLoading: false
+    }
+  },
+  methods: {
+    async click_start() {
+      this.isLoading = true
+      const res = await axios("/getWordList")
+      const wordList = res.data.data
+      console.log(wordList)
+      this.isLoading = false
+      this.start = true
+    }
+  }
 }
 </script>
 
 <style>
+#start-window {
+  display: grid;
+  place-items: center;
+  border: 4px solid;
+  margin: 50px auto 0 auto;
+  width: 500px;
+  height: 580px;
+}
+#start {
+  display: grid;
+  place-items: center;
+  width: 150px;
+  height: 50px;
+}
+
 #game-window {
   border: 4px solid;
   margin: 50px auto 0 auto;
