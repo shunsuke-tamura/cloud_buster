@@ -2,12 +2,12 @@ certifi==2021.10.8
 charset-normalizer==2.0.11
 click==8.0.3
 colorama==0.4.4
-Flask @ file:///tmp/build/80754af9/flask_1634118196080/work
+Flask==2.0.2
 idna==3.3
-itsdangerous @ file:///tmp/build/80754af9/itsdangerous_1621432558163/work
-Jinja2 @ file:///tmp/build/80754af9/jinja2_1635780242639/work
-MarkupSafe @ file:///C:/ci/markupsafe_1621528502553/work
+itsdangerous==2.0.1
+Jinja2==3.0.2
+MarkupSafe==2.0.1
 requests==2.27.1
 urllib3==1.26.8
-Werkzeug @ file:///tmp/build/80754af9/werkzeug_1635505089296/work
+Werkzeug==2.0.2
 wincertstore==0.2
