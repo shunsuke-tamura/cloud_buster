@@ -32,11 +32,26 @@ def makeSuggestList():
                 for word in eval(str(r.json()))[1]:
                     word = word.lower().replace(cloud.lower(), '')
                     word = word.replace('アズレン', '')
+                    word = word.replace('あずれん', '')
+                    word = word.replace('アズレ', '')
+                    word = word.replace('あずれ', '')
                     word = word.replace('ヘロク', '')
+                    word = word.replace('へろく', '')
                     if len(word) != 0:
                         if word[0] == " " or word[0] == "　":
                             word = word[1:]
                         words.append(word)
         words = list(set(words))
+    dup = []
+    dup.extend(list(set(wordList['Azure']) & set(wordList['AWS'])))
+    dup.extend(list(set(wordList['Azure']) & set(wordList['GCP'])))
+    dup.extend(list(set(wordList['Azure']) & set(wordList['Heroku'])))
+    dup.extend(list(set(wordList['AWS']) & set(wordList['GCP'])))
+    dup.extend(list(set(wordList['AWS']) & set(wordList['Heroku'])))
+    dup.extend(list(set(wordList['GCP']) & set(wordList['Heroku'])))
+    wordList['Azure'] = list(set(wordList['Azure']) - set(dup))
+    wordList['AWS'] = list(set(wordList['AWS']) - set(dup))
+    wordList['GCP'] = list(set(wordList['GCP']) - set(dup))
+    wordList['Heroku'] = list(set(wordList['Heroku']) - set(dup))
     return wordList
         
