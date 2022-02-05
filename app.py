@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify #追加
+from flask import Flask, render_template, request, jsonify
+import maker
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False #日本語文字化け対策
@@ -14,6 +15,16 @@ def hello():
             'status':'OK',
             'data':data
         })
+
+@app.route('/getWordList')
+def getWordList():
+    data = maker.makeSuggestList()
+    # return data
+    return jsonify({
+            'status':'OK',
+            'data':data
+        })
+
 
 ## おまじない
 if __name__ == "__main__":
