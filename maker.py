@@ -1,5 +1,5 @@
 import requests
-import json
+import random
 
 def makeSuggestList():
     wordList = {"Azure": [], "AWS": [], "GCP": [], "Heroku": []}
@@ -50,8 +50,12 @@ def makeSuggestList():
     dup.extend(list(set(wordList['AWS']) & set(wordList['Heroku'])))
     dup.extend(list(set(wordList['GCP']) & set(wordList['Heroku'])))
     wordList['Azure'] = list(set(wordList['Azure']) - set(dup))
+    random.shuffle(wordList['Azure'])
     wordList['AWS'] = list(set(wordList['AWS']) - set(dup))
+    random.shuffle(wordList['AWS'])
     wordList['GCP'] = list(set(wordList['GCP']) - set(dup))
+    random.shuffle(wordList['GCP'])
     wordList['Heroku'] = list(set(wordList['Heroku']) - set(dup))
+    random.shuffle(wordList['Heroku'])
     return wordList
         
