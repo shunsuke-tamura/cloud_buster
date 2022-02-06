@@ -49,7 +49,7 @@ export default {
       console.log(this.options);
     },
     choice(num) {
-      this.$store.commit("atack", this.options[num].cloud)
+      this.$store.commit("attack", this.options[num].cloud)
       this.options = []
       this.make_options()
       console.log(this.$store.state.enemy_status);

@@ -9,9 +9,12 @@ export default new Vuex.Store({
     damage: {Azure: 0, AWS: 0, GCP: 0, Heroku: 0},
     enemy_status: {cloud: "AWS", HP: 20, condition: null},
     player_status: {cloud: "Azure", HP: 20, condition: null},
-    atack_res: null
+    situation: null
   },
   mutations: {
+    setStart(state) {
+      state.situation = "start"
+    },
     setWordList(state, list) {
       state.wordList = list
     },
@@ -21,21 +24,26 @@ export default new Vuex.Store({
     setDamage(state, damage) {
       state.damage = damage
     },
-    atack(state, cloud) {
+    attack(state, cloud) {
       if (cloud == state.enemy_status.cloud) {
         console.log(state.damage[cloud]);
         state.enemy_status.HP = (state.enemy_status.HP + state.damage[cloud])
         if (state.enemy_status.HP > 20) {
           state.enemy_status.HP = 20
         }
-        this.atack_res = "faild"
+        state.situation = "attack faild" + state.damage[cloud]
       }
       else if (cloud == "Azure") {
         state.enemy_status.HP -= state.damage["Azure"]
-        this.atack_res = "success"
+        if (state.damage["Azure"] == 3) {
+          state.situation = "attack perfect"
+        }
+        else {
+          state.situation = "attack success"+ state.damage["Azure"]
+        }
       }
       else {
-        this.atack_res = "keep"
+        state.situation = "can not attack"
       }
     }
   },
