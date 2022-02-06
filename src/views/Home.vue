@@ -14,13 +14,13 @@
     </div>
     <div id="game-window" v-else>
       <div id="enemy-container">
-        <img id="enemy" src="../assets/aws.jpg" alt="azure" title="azure">
+        <img id="enemy" v-bind:class="{blinking: enemy_injured}" src="../assets/aws.jpg" alt="aws" title="aws">
         <div id="enemy-status">
           <status class="status-details" :side="'enemy'" />
         </div>
       </div>
       <div id="player-container">
-        <img id="player" src="../assets/azure.jpg" alt="azure" title="azure">
+        <img id="player" v-bind:class="{blinking: player_injured}" src="../assets/azure.jpg" alt="azure" title="azure">
         <div id="player-status">
           <status class="status-details" :side="'player'" />
         </div>
@@ -47,7 +47,29 @@ export default {
   data() {
     return {
       start: false,
-      isLoading: false
+      isLoading: false,
+      enemy_injured: false,
+      player_injured: false
+    }
+  },
+  computed: {
+    situation() {
+      return this.$store.state.situation
+    }
+  },
+  watch: {
+    async situation() {
+      console.log(this.situation);
+      if (this.situation == "attack perfect" || this.situation.indexOf('attack success') > -1) {
+        this.enemy_injured = true;
+        await this.wait(3)
+        this.enemy_injured = false;
+      }
+      else if (this.situation.indexOf("counter") > -1) {
+        this.player_injured = true;
+        await this.wait(3)
+        this.player_injured = false;
+      }
     }
   },
   methods: {
@@ -59,6 +81,11 @@ export default {
       this.$store.commit("setStart")
       this.isLoading = false
       this.start = true
+    },
+    wait(sec) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, sec*1000);
+      })
     }
   }
 }
@@ -140,5 +167,14 @@ export default {
 .status-details {
   width: 100%;
   height: 100%;
+}
+
+.blinking {
+  animation:blink 0.3s steps(1) 4;
+}
+@keyframes blink {
+  0% {opacity:0;}
+  50% {opacity:1;}
+  100% {opacity:0;}
 }
 </style>

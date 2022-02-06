@@ -10,7 +10,6 @@ export default {
   computed: {
     text() {
       const situation = this.$store.state.situation
-      console.log(situation);
       const cloud = this.$store.state.enemy_status.cloud
       if (situation == "start") {
         return `共に競い合う中でもあるけど、何かと比較されるのが若干鼻につくから倒したい"${cloud}"に勝負を仕掛けた`
@@ -28,6 +27,15 @@ export default {
       }
       else if (situation == "can not attack") {
         return `大人な事情によりAzureは体がしびれて動けなった`
+      }
+      else if (situation.indexOf('counter') > -1) {
+        const damage = situation.replace("counter", "")
+        if (Number(damage) >= 3) {
+          return `Azureのセキュリティホールに攻撃があたった！Azureに${damage}ダメージ！`
+        }
+        else {
+          return `${cloud}からの反撃！${damage}ダメージを受けた！`
+        }
       }
       else {
         return ""

@@ -13,6 +13,8 @@ export default new Vuex.Store({
   },
   mutations: {
     setStart(state) {
+      state.enemy_status = {cloud: "AWS", HP: 20, condition: null}
+      state.player_status = {cloud: "Azure", HP: 20, condition: null}
       state.situation = "start"
     },
     setWordList(state, list) {
@@ -26,7 +28,6 @@ export default new Vuex.Store({
     },
     attack(state, cloud) {
       if (cloud == state.enemy_status.cloud) {
-        console.log(state.damage[cloud]);
         state.enemy_status.HP = (state.enemy_status.HP + state.damage[cloud])
         if (state.enemy_status.HP > 20) {
           state.enemy_status.HP = 20
@@ -45,6 +46,10 @@ export default new Vuex.Store({
       else {
         state.situation = "can not attack"
       }
+    },
+    counter(state, damage) {
+      state.player_status.HP -= damage
+      state.situation = "counter" + damage
     }
   },
   actions: {

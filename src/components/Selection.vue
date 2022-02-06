@@ -1,5 +1,5 @@
 <template>
-  <div id="selection-container">
+  <div id="selection-container" v-if="my_turn">
     <a id="lu" class="option" href=# @click="choice(0)"> {{options[0].word}} </a>
     <a id="ru" class="option" href=# @click="choice(1)"> {{options[1].word}} </a>
     <a id="ld" class="option" href=# @click="choice(2)"> {{options[2].word}} </a>
@@ -12,12 +12,13 @@ export default {
   name: "Selection",
   data() {
     return {
-      options: []
+      options: [],
+      my_turn: false,
     }
   },
   created() {
     this.make_options()
-    console.log("done!")
+    this.my_turn = true
   },
   methods: {
     make_options() {
@@ -46,14 +47,24 @@ export default {
         this.options[r] = tmp;
       }
       this.$store.commit("setDamage", damage)
-      console.log(this.options);
     },
-    choice(num) {
+    async choice(num) {
+      this.my_turn = false
       this.$store.commit("attack", this.options[num].cloud)
       this.options = []
       this.make_options()
-      console.log(this.$store.state.enemy_status);
-      console.log(this.$store.state.player_status);
+      await this.wait(4)
+      this.counter()
+      this.my_turn = true
+    },
+    counter() {
+      const n = Math.floor(Math.random() * 4) + 1
+      this.$store.commit("counter", n)
+    },
+    wait(sec) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, sec*1000);
+      })
     }
   }
 }
