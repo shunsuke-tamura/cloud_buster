@@ -25,7 +25,7 @@
           <status class="status-details" :side="'player'" />
         </div>
       </div>
-      <div id="sys-msg"></div>
+      <system-msg />
       <selection />
     </div>
   </div>
@@ -35,12 +35,14 @@
 import axios from "axios"
 import Selection from '../components/Selection.vue'
 import Status from '../components/Status.vue'
+import SystemMsg from '../components/SystemMsg.vue'
 export default {
   name: 'Home',
 
   components: {
     Selection,
     Status,
+    SystemMsg
   },
   data() {
     return {
@@ -54,6 +56,7 @@ export default {
       const res = await axios("/getWordList")
       const wordList = res.data.data
       this.$store.commit("setWordList", wordList)
+      this.$store.commit("setStart")
       this.isLoading = false
       this.start = true
     }
@@ -137,11 +140,5 @@ export default {
 .status-details {
   width: 100%;
   height: 100%;
-}
-
-#sys-msg {
-  border: 3px solid;
-  margin: 10px 10px auto 10px;
-  height: 65px;
 }
 </style>
