@@ -14,13 +14,12 @@
     </div>
     <div id="game-window" v-else>
       <div class="black-out" v-if="!blackout_end"></div>
-      <div id="enemy-container" class="left-in" v-if="!enemy_lose">
+      <div id="enemy-container" class="left-in">
         <img id="enemy" v-bind:class="{blinking: enemy_injured, bottom_out: enemy_lose}" src="../assets/aws.jpg" alt="aws" title="aws">
         <div id="enemy-status">
           <status class="status-details" :side="'enemy'" />
         </div>
       </div>
-      <div class="chara-blank" v-else></div>
 
       <div id="player-container" class="right-in">
         <img id="player" v-bind:class="{blinking: player_injured, bottom_out: player_lose}" src="../assets/azure.jpg" alt="azure" title="azure">
@@ -73,6 +72,7 @@ export default {
       battle_start: new Audio(require('@/assets/sounds/battle_start.mp3')),
       battle_bgm1: new Audio(require('@/assets/sounds/battle_bgm1.mp3')),
       battle_bgm2: new Audio(require('@/assets/sounds/battle_bgm1.mp3')),
+      win_bgm: new Audio(require('@/assets/sounds/win.mp3')),
     }
   },
   computed: {
@@ -95,10 +95,12 @@ export default {
       }
       else if (this.situation == "win" || this.situation == "lose") {
         this.end = true
+        this.battle_start.pause()
         this.battle_bgm1.pause()
         this.battle_bgm2.pause()
         if (this.situation == "win") {
           this.enemy_lose = true
+          this.win_bgm.play()
         }
         else {
           this.player_lose = true
@@ -120,8 +122,13 @@ export default {
       await this.wait(1)
       this.blackout_end = true
       await this.wait(11)
-      this.battle_bgm1.play()
       while (!this.end) {
+        if (!this.end) {
+          this.battle_bgm1.play()
+        }
+        else {
+          break;
+        }
         await this.wait(83.3)
         if (!this.end) {
           this.battle_bgm2.play()
@@ -129,13 +136,7 @@ export default {
         else {
           break;
         }
-          await this.wait(83.3)
-        if (!this.end) {
-          this.battle_bgm1.play()
-        }
-        else {
-          break;
-        }
+        await this.wait(83.3)
       }
     },
     click_restart() {
@@ -240,11 +241,6 @@ export default {
   border-bottom-left-radius: 0px;
   width: 200px;
   height: 60px;
-}
-
-.chara-blank {
-  width: 492px;
-  height: 150px;
 }
 
 .status-details {

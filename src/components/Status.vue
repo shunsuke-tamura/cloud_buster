@@ -3,7 +3,7 @@
     <div id="name">{{name}}</div>
     <a class="flex-wrap">
       <div id="hp-bar"><div id="hp" :style="hp_width"></div></div>
-      <div id="hp-num">{{hp}}/20</div>
+      <div id="hp-num" @click="cheat">{{hp}}/20</div>
     </a>
   </div>
 </template>
@@ -39,6 +39,11 @@ export default {
         this.$store.commit("setEnd", this.side)
       }
       return `width: ${116 * (this.hp / 20)}px;`
+    }
+  },
+  methods: {
+    cheat() {
+      this.$store.commit("OfficialCheat")
     }
   }
 }
