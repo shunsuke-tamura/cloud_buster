@@ -67,6 +67,9 @@ export default new Vuex.Store({
     },
     OfficialCheat(state) {
       state.enemy_status.HP -= 20
+      if (state.enemy_status.HP < 0) {
+        state.player_status.HP = 0
+      }
       state.situation = "attack success"+ state.damage["Azure"]
     }
   },
