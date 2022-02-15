@@ -1,4 +1,5 @@
 # cloud_buster
+デプロイ先：https://orange-hill-0870e4700.1.azurestaticapps.net/#/
 
 ## Project setup
 ```
