@@ -17,6 +17,14 @@ export default new Vuex.Store({
       state.player_status = {cloud: "Azure", HP: 20, condition: null}
       state.situation = "start"
     },
+    setEnd(state, loser) {
+      if (loser == "enemy") {
+        state.situation = "win"
+      }
+      else {
+        state.situation = "lose"
+      }
+    },
     setWordList(state, list) {
       state.wordList = list
     },
@@ -42,6 +50,9 @@ export default new Vuex.Store({
         else {
           state.situation = "attack success"+ state.damage["Azure"]
         }
+        if (state.enemy_status.HP < 0) {
+          state.enemy_status.HP = 0
+        }
       }
       else {
         state.situation = "can not attack"
@@ -49,6 +60,9 @@ export default new Vuex.Store({
     },
     counter(state, damage) {
       state.player_status.HP -= damage
+      if (state.player_status.HP < 0) {
+        state.player_status.HP = 0
+      }
       state.situation = "counter" + damage
     }
   },
