@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="main-display">
     <div id="start-window" v-if="!start">
       <v-btn
         id="start"
@@ -13,7 +13,7 @@
       </v-btn>
     </div>
     <div id="game-window" v-else>
-      <div class="black-out" v-if="!blackout_end"></div>
+      <div class="battle-start" v-if="!blackout_end"></div>
       <div id="enemy-container" class="left-in">
         <img id="enemy" v-bind:class="{blinking: enemy_injured, bottom_out: enemy_lose}" src="../assets/aws.jpg" alt="aws" title="aws">
         <div id="enemy-status">
@@ -30,7 +30,7 @@
 
       <system-msg id="sys-msg" />
       <selection v-if="!end" />
-      <div id="restart-container" v-else>
+      <div id="restart-container" v-else-if="!player_lose">
         <v-btn
           id="restart"
           color="primary"
@@ -42,7 +42,9 @@
           restart
         </v-btn>
       </div>
+      <div id="selection-blank" v-else></div>
     </div>
+    <div class="bloue-out" v-if="blue_out"></div>
   </div>
 </template>
 
@@ -68,6 +70,7 @@ export default {
       enemy_lose: false,
       player_injured: false,
       player_lose: false,
+      blue_out: false,
       blackout_end: false,
       battle_start: new Audio(require('@/assets/sounds/battle_start.mp3')),
       battle_bgm1: new Audio(require('@/assets/sounds/battle_bgm1.mp3')),
@@ -96,14 +99,23 @@ export default {
       else if (this.situation == "win" || this.situation == "lose") {
         this.end = true
         this.battle_start.pause()
+        this.battle_start.currentTime = 0
         this.battle_bgm1.pause()
+        this.battle_bgm1.currentTime = 0
         this.battle_bgm2.pause()
+        this.battle_bgm2.currentTime = 0
         if (this.situation == "win") {
           this.enemy_lose = true
           this.win_bgm.play()
         }
         else {
           this.player_lose = true
+          await this.wait(4)
+          this.blue_out = true
+          await this.wait(1.2)
+          this.click_restart()
+          await this.wait(0.8)
+          this.blue_out = false
         }
       }
     }
@@ -119,6 +131,8 @@ export default {
       this.isLoading = false
       this.start = true
       this.end = false
+      this.enemy_lose = false
+      this.player_lose = false
       this.battle_start.play()
       await this.wait(1)
       this.blackout_end = true
@@ -154,6 +168,11 @@ export default {
 </script>
 
 <style>
+#main-display {
+  display: grid;
+  place-items: center;
+}
+
 #start-window {
   display: grid;
   place-items: center;
@@ -313,16 +332,24 @@ export default {
   background-color: white;
 }
 
-.black-out {
+#selection-blank {
+  position: relative;
+  z-index: 2;
+  width: 492px;
+  height: 200px;
+  background-color: white;
+}
+
+.battle-start {
   position: absolute;
+  z-index: 10;
   width: 500px;
   height: 580px;
   background-color: black;
-  animation: BlackOut 1.0s;
+  animation: BattleStart 1.0s;
   animation-fill-mode: forwards;
-  z-index: 10;
 }
-@keyframes BlackOut{
+@keyframes BattleStart{
   0% {
     opacity: 1;
     transform: scale(0);
@@ -334,6 +361,31 @@ export default {
   100% {
     opacity: 0;
     transform: scale(1);
+  }
+}
+
+.bloue-out {
+  position: absolute;
+  z-index: 10;
+  margin-top: 50px;
+  width: 500px;
+  height: 580px;
+  background-color: rgb(0, 0, 88);
+  animation: BloueOut 2.0s;
+  animation-fill-mode: forwards;
+}
+@keyframes BloueOut{
+  0% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 </style>
