@@ -118,6 +118,7 @@ export default {
       this.$store.commit("setStart")
       this.isLoading = false
       this.start = true
+      this.end = false
       this.battle_start.play()
       await this.wait(1)
       this.blackout_end = true
@@ -141,7 +142,7 @@ export default {
     },
     click_restart() {
       this.start = false
-      this.end = false
+      this.win_bgm.pause()
     },
     wait(sec) {
       return new Promise((resolve) => {
