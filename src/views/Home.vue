@@ -13,20 +13,22 @@
       </v-btn>
     </div>
     <div id="game-window" v-else>
-      <div id="enemy-container" v-if="!enemy_lose">
+      <div id="enemy-container" class="right-in" v-if="!enemy_lose">
         <img id="enemy" v-bind:class="{blinking: enemy_injured}" src="../assets/aws.jpg" alt="aws" title="aws">
         <div id="enemy-status">
           <status class="status-details" :side="'enemy'" />
         </div>
       </div>
       <div class="chara-blank" v-else></div>
-      <div id="player-container" v-if="!player_lose">
+
+      <div id="player-container" class="left-in" v-if="!player_lose">
         <img id="player" v-bind:class="{blinking: player_injured}" src="../assets/azure.jpg" alt="azure" title="azure">
         <div id="player-status">
           <status class="status-details" :side="'player'" />
         </div>
       </div>
       <div class="chara-blank" v-else></div>
+
       <system-msg />
       <selection v-if="!end" />
       <div id="restart-container" v-else>
@@ -152,6 +154,8 @@ export default {
   margin: 50px auto 0 auto;
   width: 500px;
   height: 580px;
+  position: relative;
+  z-index: 10;
 }
 
 #enemy-container {
@@ -165,6 +169,7 @@ export default {
   margin: 10px 10px 0px 0px;
   width: auto;
   height: 140px;
+  z-index: 1;
 }
 #enemy-status {
   border: 3px solid;
@@ -183,6 +188,7 @@ export default {
   display: grid;
   grid-template-columns: 256px 236px;
   grid-template-rows: 70px, 70px;
+  z-index: 1;
 }
 #player {
   grid-column: 1;
@@ -221,5 +227,33 @@ export default {
   0% {opacity:0;}
   50% {opacity:1;}
   100% {opacity:0;}
+}
+
+.right-in{
+  animation: RightIn 1.6s;
+}
+@keyframes RightIn {
+  0% {
+    opacity: 0;
+    transform: translateX(64px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.left-in{
+  animation: LeftIn 1.6s;
+}
+@keyframes LeftIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-64px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 </style>
