@@ -103,7 +103,8 @@ export default {
   methods: {
     async click_start() {
       this.isLoading = true
-      const res = await axios("/getWordList")
+      axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
+      const res = await axios("https://tatakimaru.azurewebsites.net/getWordList")
       const wordList = res.data.data
       this.$store.commit("setWordList", wordList)
       this.$store.commit("setStart")
