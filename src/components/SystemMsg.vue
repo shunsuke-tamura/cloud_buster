@@ -7,6 +7,12 @@
 <script>
 export default {
   name: "SystemMsg",
+  data() {
+    return {
+      damage_se: new Audio(require('@/assets/sounds/damage_se.mp3')),
+      bigdamage_se: new Audio(require('@/assets/sounds/bigdamage_se.mp3')),
+    }
+  },
   computed: {
     text() {
       const situation = this.$store.state.situation
@@ -19,9 +25,11 @@ export default {
         return `相手の特性"${cloud}ボディー"によってAzureの攻撃を吸収された！相手の体力が${recovery}回復した`
       }
       else if (situation == "attack perfect") {
+        this.bigdamage_se.play()
         return `Azureの攻撃が${cloud}のセキュリティホールにあたった！${cloud}に3ダメージ！`
       }
       else if (situation.indexOf('attack success') > -1) {
+        this.damage_se.play()
         const attack = situation.replace('attack success', "")
         return `Azureの攻撃が命中した！${cloud}に${attack}ダメージ！`
       }
@@ -31,11 +39,19 @@ export default {
       else if (situation.indexOf('counter') > -1) {
         const damage = situation.replace("counter", "")
         if (Number(damage) >= 3) {
+          this.bigdamage_se.play()
           return `Azureのセキュリティホールに攻撃があたった！Azureに${damage}ダメージ！`
         }
         else {
+          this.damage_se.play()
           return `${cloud}からの反撃！${damage}ダメージを受けた！`
         }
+      }
+      else if (situation == "win") {
+        return `${cloud}との勝負に勝利した`
+      }
+      else if (situation == "lose") {
+        return `${cloud}に敗北した`
       }
       else {
         return ""

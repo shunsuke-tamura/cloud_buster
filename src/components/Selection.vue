@@ -47,6 +47,10 @@ export default {
         this.options[r] = tmp;
       }
       this.$store.commit("setDamage", damage)
+      console.log(this.options[0].cloud, this.options[0].word);
+      console.log(this.options[1].cloud, this.options[1].word);
+      console.log(this.options[2].cloud, this.options[2].word);
+      console.log(this.options[3].cloud, this.options[3].word);
     },
     async choice(num) {
       this.my_turn = false

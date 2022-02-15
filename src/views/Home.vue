@@ -13,7 +13,8 @@
       </v-btn>
     </div>
     <div id="game-window" v-else>
-      <div id="enemy-container" class="right-in" v-if="!enemy_lose">
+      <div class="black-out" v-if="!blackout_end"></div>
+      <div id="enemy-container" class="left-in" v-if="!enemy_lose">
         <img id="enemy" v-bind:class="{blinking: enemy_injured}" src="../assets/aws.jpg" alt="aws" title="aws">
         <div id="enemy-status">
           <status class="status-details" :side="'enemy'" />
@@ -21,7 +22,7 @@
       </div>
       <div class="chara-blank" v-else></div>
 
-      <div id="player-container" class="left-in" v-if="!player_lose">
+      <div id="player-container" class="right-in" v-if="!player_lose">
         <img id="player" v-bind:class="{blinking: player_injured}" src="../assets/azure.jpg" alt="azure" title="azure">
         <div id="player-status">
           <status class="status-details" :side="'player'" />
@@ -68,7 +69,11 @@ export default {
       enemy_injured: false,
       enemy_lose: false,
       player_injured: false,
-      player_lose: false
+      player_lose: false,
+      blackout_end: false,
+      battle_start: new Audio(require('@/assets/sounds/battle_start.mp3')),
+      battle_bgm1: new Audio(require('@/assets/sounds/battle_bgm1.mp3')),
+      battle_bgm2: new Audio(require('@/assets/sounds/battle_bgm1.mp3')),
     }
   },
   computed: {
@@ -91,6 +96,8 @@ export default {
       }
       else if (this.situation == "win" || this.situation == "lose") {
         this.end = true
+        this.battle_bgm1.pause()
+        this.battle_bgm2.pause()
         if (this.situation == "win") {
           this.enemy_lose = true
         }
@@ -110,6 +117,17 @@ export default {
       this.$store.commit("setStart")
       this.isLoading = false
       this.start = true
+      this.battle_start.play()
+      await this.wait(1)
+      this.blackout_end = true
+      await this.wait(11)
+      this.battle_bgm1.play()
+      for(;;) {
+        await this.wait(83.3)
+        this.battle_bgm2.play()
+        await this.wait(83.3)
+        this.battle_bgm1.play()
+      }
     },
     click_restart() {
       this.start = false
@@ -156,7 +174,6 @@ export default {
   width: 500px;
   height: 580px;
   position: relative;
-  z-index: 10;
 }
 
 #enemy-container {
@@ -255,6 +272,30 @@ export default {
   100% {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+.black-out {
+  position: absolute;
+  width: 500px;
+  height: 580px;
+  background-color: black;
+  animation: BlackOut 1.0s;
+  animation-fill-mode: forwards;
+  z-index: 2;
+}
+@keyframes BlackOut{
+  0% {
+    opacity: 1;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
   }
 }
 </style>
