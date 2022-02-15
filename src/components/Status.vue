@@ -35,6 +35,9 @@ export default {
       }
     },
     hp_width() {
+      if (this.hp <= 0) {
+        this.$store.commit("setEnd", this.side)
+      }
       return `width: ${116 * (this.hp / 20)}px;`
     }
   }

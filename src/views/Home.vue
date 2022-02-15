@@ -13,20 +13,34 @@
       </v-btn>
     </div>
     <div id="game-window" v-else>
-      <div id="enemy-container">
+      <div id="enemy-container" v-if="!enemy_lose">
         <img id="enemy" v-bind:class="{blinking: enemy_injured}" src="../assets/aws.jpg" alt="aws" title="aws">
         <div id="enemy-status">
           <status class="status-details" :side="'enemy'" />
         </div>
       </div>
-      <div id="player-container">
+      <div class="chara-blank" v-else></div>
+      <div id="player-container" v-if="!player_lose">
         <img id="player" v-bind:class="{blinking: player_injured}" src="../assets/azure.jpg" alt="azure" title="azure">
         <div id="player-status">
           <status class="status-details" :side="'player'" />
         </div>
       </div>
+      <div class="chara-blank" v-else></div>
       <system-msg />
-      <selection />
+      <selection v-if="!end" />
+      <div id="restart-container" v-else>
+        <v-btn
+          id="restart"
+          color="primary"
+          elevation="15"
+          x-large
+          :loading=isLoading
+          @click="click_restart()"
+        > 
+          restart
+        </v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -47,9 +61,12 @@ export default {
   data() {
     return {
       start: false,
+      end: false,
       isLoading: false,
       enemy_injured: false,
-      player_injured: false
+      enemy_lose: false,
+      player_injured: false,
+      player_lose: false
     }
   },
   computed: {
@@ -59,16 +76,25 @@ export default {
   },
   watch: {
     async situation() {
-      console.log(this.situation);
+      console.log(this.situation)
       if (this.situation == "attack perfect" || this.situation.indexOf('attack success') > -1) {
-        this.enemy_injured = true;
+        this.enemy_injured = true
         await this.wait(3)
-        this.enemy_injured = false;
+        this.enemy_injured = false
       }
       else if (this.situation.indexOf("counter") > -1) {
-        this.player_injured = true;
+        this.player_injured = true
         await this.wait(3)
-        this.player_injured = false;
+        this.player_injured = false
+      }
+      else if (this.situation == "win" || this.situation == "lose") {
+        this.end = true
+        if (this.situation == "win") {
+          this.enemy_lose = true
+        }
+        else {
+          this.player_lose = true
+        }
       }
     }
   },
@@ -81,6 +107,10 @@ export default {
       this.$store.commit("setStart")
       this.isLoading = false
       this.start = true
+    },
+    click_restart() {
+      this.start = false
+      this.end = false
     },
     wait(sec) {
       return new Promise((resolve) => {
@@ -105,6 +135,16 @@ export default {
   place-items: center;
   width: 150px;
   height: 50px;
+}
+
+#restart-container {
+  display: grid;
+  place-items: center;
+  height: 200px;
+}
+#restart {
+  display: grid;
+  place-items: center;
 }
 
 #game-window {
@@ -162,6 +202,11 @@ export default {
   border-bottom-left-radius: 0px;
   width: 200px;
   height: 60px;
+}
+
+.chara-blank {
+  width: 492px;
+  height: 150px;
 }
 
 .status-details {
