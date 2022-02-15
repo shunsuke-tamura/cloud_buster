@@ -1,5 +1,5 @@
 <template>
-  <div id="sys-msg">
+  <div>
     <a id="text">{{text}}</a>
   </div>
 </template>
@@ -61,15 +61,7 @@ export default {
 }
 </script>
 
-<style scoped>
-#sys-msg {
-  display: grid;
-  place-items: center;
-  border: 3px solid;
-  margin: 10px 10px auto 10px;
-  height: 65px;
-}
-
+<style>
 #text {
   color: #263806;
   font-weight: 800;

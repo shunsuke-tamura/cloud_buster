@@ -15,22 +15,21 @@
     <div id="game-window" v-else>
       <div class="black-out" v-if="!blackout_end"></div>
       <div id="enemy-container" class="left-in" v-if="!enemy_lose">
-        <img id="enemy" v-bind:class="{blinking: enemy_injured}" src="../assets/aws.jpg" alt="aws" title="aws">
+        <img id="enemy" v-bind:class="{blinking: enemy_injured, bottom_out: enemy_lose}" src="../assets/aws.jpg" alt="aws" title="aws">
         <div id="enemy-status">
           <status class="status-details" :side="'enemy'" />
         </div>
       </div>
       <div class="chara-blank" v-else></div>
 
-      <div id="player-container" class="right-in" v-if="!player_lose">
-        <img id="player" v-bind:class="{blinking: player_injured}" src="../assets/azure.jpg" alt="azure" title="azure">
+      <div id="player-container" class="right-in">
+        <img id="player" v-bind:class="{blinking: player_injured, bottom_out: player_lose}" src="../assets/azure.jpg" alt="azure" title="azure">
         <div id="player-status">
           <status class="status-details" :side="'player'" />
         </div>
       </div>
-      <div class="chara-blank" v-else></div>
 
-      <system-msg />
+      <system-msg id="sys-msg" />
       <selection v-if="!end" />
       <div id="restart-container" v-else>
         <v-btn
@@ -122,11 +121,21 @@ export default {
       this.blackout_end = true
       await this.wait(11)
       this.battle_bgm1.play()
-      for(;;) {
+      while (!this.end) {
         await this.wait(83.3)
-        this.battle_bgm2.play()
-        await this.wait(83.3)
-        this.battle_bgm1.play()
+        if (!this.end) {
+          this.battle_bgm2.play()
+        }
+        else {
+          break;
+        }
+          await this.wait(83.3)
+        if (!this.end) {
+          this.battle_bgm1.play()
+        }
+        else {
+          break;
+        }
       }
     },
     click_restart() {
@@ -159,9 +168,12 @@ export default {
 }
 
 #restart-container {
+  position: relative;
+  z-index: 2;
   display: grid;
   place-items: center;
   height: 200px;
+  background-color: white;
 }
 #restart {
   display: grid;
@@ -203,10 +215,12 @@ export default {
 }
 
 #player-container {
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: 256px 236px;
   grid-template-rows: 70px, 70px;
-  z-index: 1;
+  background-color: white;
 }
 #player {
   grid-column: 1;
@@ -275,6 +289,33 @@ export default {
   }
 }
 
+.bottom_out {
+  animation: BottomOut 1.0s;
+  animation-fill-mode: forwards;
+}
+@keyframes BottomOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(140px);
+  }
+}
+
+#sys-msg {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  border: 3px solid;
+  margin: 10px 10px auto 10px;
+  height: 65px;
+  color: black;
+  background-color: white;
+}
+
 .black-out {
   position: absolute;
   width: 500px;
@@ -282,7 +323,7 @@ export default {
   background-color: black;
   animation: BlackOut 1.0s;
   animation-fill-mode: forwards;
-  z-index: 2;
+  z-index: 10;
 }
 @keyframes BlackOut{
   0% {
