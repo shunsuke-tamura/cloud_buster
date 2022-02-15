@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     cheat() {
-      this.$store.commit("OfficialCheat")
+      this.$store.commit("OfficialCheat", this.side)
     }
   }
 }
