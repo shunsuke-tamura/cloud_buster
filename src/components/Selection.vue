@@ -1,9 +1,9 @@
 <template>
-  <div id="selection-container" v-if="my_turn">
-    <a id="lu" class="option" href=# @click="choice(0)"> {{options[0].word}} </a>
-    <a id="ru" class="option" href=# @click="choice(1)"> {{options[1].word}} </a>
-    <a id="ld" class="option" href=# @click="choice(2)"> {{options[2].word}} </a>
-    <a id="rd" class="option" href=# @click="choice(3)"> {{options[3].word}} </a>
+  <div class="selection" v-if="my_turn">
+    <button class="option-button selection__button" @click="choice(0)"> {{options[0].word}} </button>
+    <button class="option-button selection__button" @click="choice(2)"> {{options[2].word}} </button>
+    <button class="option-button selection__button" @click="choice(3)"> {{options[3].word}} </button>
+    <button class="option-button selection__button" @click="choice(1)"> {{options[1].word}} </button>
   </div>
 </template>
 
@@ -74,42 +74,25 @@ export default {
 }
 </script>
 
-<style scoped>
-#selection-container {
-  display: grid;
-  grid-template-columns: 246px 246px;
-  grid-template-rows: 100px 100px;
+<style lang="scss">
+.selection {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  padding: 10px;
 }
-#lu {
-  grid-row: 1; grid-column: 1;
-  margin: 10px 2.5px 2.5px 10px;
-}
-#ru {
-  grid-row: 1; grid-column: 2;
-  margin: 10px 10px 2.5px 2.5px;
-}
-#ld {
-  grid-row: 2; grid-column: 1;
-  margin: 2.5px 2.5px 10px 10px;
-}
-#rd {
-  grid-row: 2; grid-column: 2;
-  margin: 2.5px 10px 10px 2.5px;
-}
-.option {
-  border-top-left-radius: 15px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 15px;
-  border-bottom-left-radius: 5px;
-  display: grid;
-  place-items: center;
+
+.option-button {
+  width: 49%;
+  height: 90px;
+  border-radius: 15px 5px 15px 5px;
   font-size: 20pt;
   font-weight: blob;
-  border: 3px solid;
+  border: 3px solid black;
   color: black;
-  text-decoration: none;
 }
-.option:hover {
+.option-button:hover {
   background-color: aqua;
 }
 </style>
