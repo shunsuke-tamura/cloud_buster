@@ -14,17 +14,21 @@
     </div>
     <div id="game-window" v-else>
       <div class="battle-start" v-if="!blackout_end"></div>
-      <div id="enemy-container" class="left-in">
-        <img id="enemy" v-bind:class="{blinking: enemy_injured, bottom_out: enemy_lose}" src="../assets/aws.jpg" alt="aws" title="aws">
-        <div id="enemy-status">
-          <status class="status-details" :side="'enemy'" />
+      <!-- 陣内エディション -->
+      <div class="enemy --left-in">
+        <p class="enemy__img">
+          <img v-bind:class="{blinking: enemy_injured, bottom_out: enemy_lose}" src="../assets/aws.jpg" alt="aws" title="aws">
+        </p>
+        <div class="enemy__status">
+          <status :side="'enemy'" />
         </div>
       </div>
+      <!--  -->
 
       <div id="player-container" class="right-in">
         <img id="player" v-bind:class="{blinking: player_injured, bottom_out: player_lose}" src="../assets/azure.jpg" alt="azure" title="azure">
         <div id="player-status">
-          <status class="status-details" :side="'player'" />
+          <status :side="'player'" />
         </div>
       </div>
 
@@ -167,7 +171,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 #main-display {
   display: grid;
   place-items: center;
@@ -205,34 +209,40 @@ export default {
   border: 4px solid;
   margin: 50px auto 0 auto;
   width: 500px;
-  height: 580px;
+  // height: 580px;
   position: relative;
 }
 
-#enemy-container {
-  display: grid;
-  grid-template-columns: 236px 256px;
-  grid-template-rows: 70px, 70px;
-}
-#enemy {
-  grid-column: 2;
-  grid-row: 1 / 2;
-  margin: 10px 10px 0px 0px;
-  width: auto;
-  height: 140px;
-  z-index: 1;
-}
-#enemy-status {
-  border: 3px solid;
-  grid-column: 1;
-  grid-row: 1;
-  margin: 30px 2px auto auto;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-  border-bottom-right-radius: 0px;
-  border-bottom-left-radius: 15px;
-  width: 200px;
-  height: 60px;
+.enemy {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 150px;
+  &__img {
+    grid-column: 2;
+    grid-row: 1 / 2;
+    margin: 10px 10px 0px 0px;
+    width: 250px;
+    height: 140px;
+    z-index: 1;
+    img {
+      object-fit: contain;
+      object-position: 0% 0%;
+      width: inherit;
+      height: inherit;
+    }
+  }
+  &__status {
+    border: 3px solid;
+    grid-column: 1;
+    grid-row: 1;
+    margin: 30px 2px auto auto;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 15px;
+    width: 200px;
+    height: 60px;
+  }
 }
 
 #player-container {
@@ -263,11 +273,6 @@ export default {
   height: 60px;
 }
 
-.status-details {
-  width: 100%;
-  height: 100%;
-}
-
 .blinking {
   animation:blink 0.3s steps(1) 4;
 }
@@ -291,7 +296,7 @@ export default {
   }
 }
 
-.left-in{
+.--left-in{
   animation: LeftIn 1.6s;
 }
 @keyframes LeftIn {
