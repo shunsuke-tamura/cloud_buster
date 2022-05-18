@@ -3,6 +3,7 @@
 - cloud_buster：https://orange-hill-0870e4700.1.azurestaticapps.net/#/  
 - たたき丸：https://tatakimaru.azurewebsites.net/getWordList  
 ※たたき丸のコードは[tatakimaruブランチ](https://github.com/shunsuke-tamura/cloud_buster/tree/tatakimaru)にあります  
+## アプリの説明
 - https://topaz.dev/projects/7d691c781c507df96081
 
 ## Project setup
