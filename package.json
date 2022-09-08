@@ -49,5 +49,9 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "volta": {
+    "node": "16.17.0",
+    "npm": "8.19.1"
+  }
 }
