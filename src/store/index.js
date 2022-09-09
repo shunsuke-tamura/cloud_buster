@@ -6,16 +6,16 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     wordList: null,
-    damage: {Azure: 0, AWS: 0, GCP: 0, Heroku: 0},
-    enemy_status: {cloud: "AWS", HP: 20, condition: null},
-    player_status: {cloud: "Azure", HP: 20, condition: null},
+    damage: { Azure: 0, AWS: 0, GCP: 0, Heroku: 0 },
+    enemy_status: { cloud: "AWS", HP: 20, condition: null },
+    player_status: { cloud: "Azure", HP: 20, condition: null },
     situation: null,
-    authInfo: {uid: null, email: null}
+    authInfo: { uid: null, email: null }
   },
   mutations: {
     setStart(state) {
-      state.enemy_status = {cloud: "AWS", HP: 20, condition: null}
-      state.player_status = {cloud: "Azure", HP: 20, condition: null}
+      state.enemy_status = { cloud: "AWS", HP: 20, condition: null }
+      state.player_status = { cloud: "Azure", HP: 20, condition: null }
       state.situation = "start"
     },
     setEnd(state, loser) {
@@ -49,7 +49,7 @@ export default new Vuex.Store({
           state.situation = "attack perfect"
         }
         else {
-          state.situation = "attack success"+ state.damage["Azure"]
+          state.situation = "attack success" + state.damage["Azure"]
         }
         if (state.enemy_status.HP < 0) {
           state.enemy_status.HP = 0
@@ -72,7 +72,7 @@ export default new Vuex.Store({
         if (state.enemy_status.HP < 0) {
           state.enemy_status.HP = 0
         }
-        state.situation = "attack success"+ "10"
+        state.situation = "attack success" + "10"
       }
       else {
         state.player_status.HP -= 10

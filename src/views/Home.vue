@@ -9,9 +9,9 @@
         color="primary"
         elevation="15"
         x-large
-        :loading=isLoading
+        :loading="isLoading"
         @click="click_start()"
-      > 
+      >
         start
       </v-btn>
     </div>
@@ -20,7 +20,12 @@
       <!-- 陣内エディション -->
       <div class="enemy --left-in">
         <p class="enemy__img">
-          <img v-bind:class="{blinking: enemy_injured, bottom_out: enemy_lose}" src="../assets/aws.jpg" alt="aws" title="aws">
+          <img
+            v-bind:class="{ blinking: enemy_injured, bottom_out: enemy_lose }"
+            src="../assets/aws.jpg"
+            alt="aws"
+            title="aws"
+          />
         </p>
         <div class="enemy__status">
           <status :side="'enemy'" />
@@ -29,7 +34,13 @@
       <!--  -->
 
       <div id="player-container" class="right-in">
-        <img id="player" v-bind:class="{blinking: player_injured, bottom_out: player_lose}" src="../assets/azure.jpg" alt="azure" title="azure">
+        <img
+          id="player"
+          v-bind:class="{ blinking: player_injured, bottom_out: player_lose }"
+          src="../assets/azure.jpg"
+          alt="azure"
+          title="azure"
+        />
         <div id="player-status">
           <status :side="'player'" />
         </div>
@@ -43,9 +54,9 @@
           color="primary"
           elevation="15"
           x-large
-          :loading=isLoading
+          :loading="isLoading"
           @click="click_restart()"
-        > 
+        >
           restart
         </v-btn>
       </div>
@@ -56,19 +67,19 @@
 </template>
 
 <script>
-import axios from "axios"
-import Selection from '../components/Selection.vue'
-import Status from '../components/Status.vue'
-import SystemMsg from '../components/SystemMsg.vue'
-import Authentication from "../components/Authentication.vue"
+import axios from "axios";
+import Selection from "../components/Selection.vue";
+import Status from "../components/Status.vue";
+import SystemMsg from "../components/SystemMsg.vue";
+import Authentication from "../components/Authentication.vue";
 export default {
-  name: 'Home',
+  name: "Home",
 
   components: {
     Selection,
     Status,
     SystemMsg,
-    Authentication
+    Authentication,
   },
   data() {
     return {
@@ -81,110 +92,113 @@ export default {
       player_lose: false,
       blue_out: false,
       blackout_end: false,
-      battle_start: new Audio(require('@/assets/sounds/battle_start.mp3')),
-      battle_bgm1: new Audio(require('@/assets/sounds/battle_bgm1.mp3')),
-      battle_bgm2: new Audio(require('@/assets/sounds/battle_bgm1.mp3')),
-      win_bgm: new Audio(require('@/assets/sounds/win.mp3')),
-    }
+      battle_start: new Audio(require("@/assets/sounds/battle_start.mp3")),
+      battle_bgm1: new Audio(require("@/assets/sounds/battle_bgm1.mp3")),
+      battle_bgm2: new Audio(require("@/assets/sounds/battle_bgm1.mp3")),
+      win_bgm: new Audio(require("@/assets/sounds/win.mp3")),
+    };
   },
   computed: {
     situation() {
-      return this.$store.state.situation
+      return this.$store.state.situation;
     },
     logined() {
-      return this.$store.state.authInfo.uid !== null && this.$store.state.authInfo.email !== null
-    }
+      return (
+        this.$store.state.authInfo.uid !== null &&
+        this.$store.state.authInfo.email !== null
+      );
+    },
   },
   watch: {
     async situation() {
-      console.log(this.situation)
-      if (this.situation == "attack perfect" || this.situation.indexOf('attack success') > -1) {
-        this.enemy_injured = true
-        await this.wait(3)
-        this.enemy_injured = false
-      }
-      else if (this.situation.indexOf("counter") > -1) {
-        this.player_injured = true
-        await this.wait(3)
-        this.player_injured = false
-      }
-      else if (this.situation == "win" || this.situation == "lose") {
-        this.end = true
-        this.battle_start.pause()
-        this.battle_start.currentTime = 0
-        this.battle_bgm1.pause()
-        this.battle_bgm1.currentTime = 0
-        this.battle_bgm2.pause()
-        this.battle_bgm2.currentTime = 0
+      console.log(this.situation);
+      if (
+        this.situation == "attack perfect" ||
+        this.situation.indexOf("attack success") > -1
+      ) {
+        this.enemy_injured = true;
+        await this.wait(3);
+        this.enemy_injured = false;
+      } else if (this.situation.indexOf("counter") > -1) {
+        this.player_injured = true;
+        await this.wait(3);
+        this.player_injured = false;
+      } else if (this.situation == "win" || this.situation == "lose") {
+        this.end = true;
+        this.battle_start.pause();
+        this.battle_start.currentTime = 0;
+        this.battle_bgm1.pause();
+        this.battle_bgm1.currentTime = 0;
+        this.battle_bgm2.pause();
+        this.battle_bgm2.currentTime = 0;
         if (this.situation == "win") {
-          this.enemy_lose = true
-          this.win_bgm.play()
-        }
-        else {
-          this.player_lose = true
-          await this.wait(4)
-          this.blue_out = true
-          await this.wait(1.2)
-          this.click_restart()
-          await this.wait(0.8)
-          this.blue_out = false
+          this.enemy_lose = true;
+          this.win_bgm.play();
+        } else {
+          this.player_lose = true;
+          await this.wait(4);
+          this.blue_out = true;
+          await this.wait(1.2);
+          this.click_restart();
+          await this.wait(0.8);
+          this.blue_out = false;
         }
       }
     },
     logined(newVal) {
-      if(!newVal) {
-        this.start = false
+      if (!newVal) {
+        this.start = false;
       }
-    }
+    },
   },
   methods: {
     async click_start() {
-      this.isLoading = true
-      axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
-      const res = await axios("https://tatakimaru.azurewebsites.net/getWordList")
-      const wordList = res.data.data
-      this.$store.commit("setWordList", wordList)
-      this.$store.commit("setStart")
-      this.isLoading = false
-      this.start = true
-      this.end = false
-      this.enemy_lose = false
-      this.player_lose = false
-      this.battle_start.play()
-      await this.wait(1)
-      this.blackout_end = true
-      await this.wait(11)
+      this.isLoading = true;
+      axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
+      const res = await axios(
+        "https://tatakimaru.azurewebsites.net/getWordList"
+      );
+      const wordList = res.data.data;
+      this.$store.commit("setWordList", wordList);
+      this.$store.commit("setStart");
+      this.isLoading = false;
+      this.start = true;
+      this.end = false;
+      this.enemy_lose = false;
+      this.player_lose = false;
+      this.battle_start.play();
+      await this.wait(1);
+      this.blackout_end = true;
+      await this.wait(11);
       while (!this.end) {
         if (!this.end) {
-          this.battle_bgm1.play()
-        }
-        else {
+          this.battle_bgm1.play();
+        } else {
           break;
         }
-        await this.wait(83.3)
+        await this.wait(83.3);
         if (!this.end) {
-          this.battle_bgm2.play()
-        }
-        else {
+          this.battle_bgm2.play();
+        } else {
           break;
         }
-        await this.wait(83.3)
+        await this.wait(83.3);
       }
     },
     click_restart() {
-      this.start = false
-      this.win_bgm.pause()
+      this.start = false;
+      this.win_bgm.pause();
     },
     wait(sec) {
       return new Promise((resolve) => {
-        setTimeout(resolve, sec*1000);
-      })
+        setTimeout(resolve, sec * 1000);
+      });
     },
     auth() {
-      this.logined = true
-    }
-  }
-}
+      this.logined = true;
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -300,15 +314,21 @@ export default {
 }
 
 .blinking {
-  animation:blink 0.3s steps(1) 4;
+  animation: blink 0.3s steps(1) 4;
 }
 @keyframes blink {
-  0% {opacity:0;}
-  50% {opacity:1;}
-  100% {opacity:0;}
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
-.right-in{
+.right-in {
   animation: RightIn 1.6s;
 }
 @keyframes RightIn {
@@ -322,7 +342,7 @@ export default {
   }
 }
 
-.--left-in{
+.--left-in {
   animation: LeftIn 1.6s;
 }
 @keyframes LeftIn {
@@ -337,7 +357,7 @@ export default {
 }
 
 .bottom_out {
-  animation: BottomOut 1.0s;
+  animation: BottomOut 1s;
   animation-fill-mode: forwards;
 }
 @keyframes BottomOut {
@@ -377,10 +397,10 @@ export default {
   width: 500px;
   height: 580px;
   background-color: black;
-  animation: BattleStart 1.0s;
+  animation: BattleStart 1s;
   animation-fill-mode: forwards;
 }
-@keyframes BattleStart{
+@keyframes BattleStart {
   0% {
     opacity: 1;
     transform: scale(0);
@@ -402,10 +422,10 @@ export default {
   width: 500px;
   height: 580px;
   background-color: rgb(0, 0, 88);
-  animation: BloueOut 2.0s;
+  animation: BloueOut 2s;
   animation-fill-mode: forwards;
 }
-@keyframes BloueOut{
+@keyframes BloueOut {
   0% {
     opacity: 0;
   }
