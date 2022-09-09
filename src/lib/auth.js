@@ -16,9 +16,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 export const signup = async (email, password) => {
-  const auth = getAuth(app);
   const res = await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
@@ -33,7 +33,6 @@ export const signup = async (email, password) => {
 };
 
 export const login = async (email, password) => {
-  const auth = getAuth(app);
   const res = await signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
