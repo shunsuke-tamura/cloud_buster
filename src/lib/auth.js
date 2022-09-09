@@ -18,12 +18,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export const signup = async (email, password) => {
+export const signup = async (email, userName, password) => {
   const res = await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      return { error: undefined, authInfo: { uid: user.uid, email: user.email } };
+      return { error: undefined, authInfo: { uid: user.uid, name: userName, email: user.email } };
     })
     .catch((error) => {
       console.log(error);

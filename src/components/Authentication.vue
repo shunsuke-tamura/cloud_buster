@@ -9,7 +9,14 @@
         v-model="email"
         :rules="[rules.email]"
         label="email"
-        prepend-icon="mdi-email "
+        prepend-icon="mdi-email"
+      ></v-text-field>
+      <v-text-field
+        v-if="tab === 1"
+        v-model="userName"
+        :rules="[rules.required]"
+        label="user name"
+        prepend-icon="mdi-account"
       ></v-text-field>
       <v-text-field
         v-model="password"
@@ -26,7 +33,7 @@
     </v-row>
     <v-row justify="center">
       <v-btn
-        v-if="tab == 0"
+        v-if="tab === 0"
         :disabled="!form"
         color="primary"
         elevation="1"
@@ -50,7 +57,8 @@
 </template>
 
 <script>
-import { login, signup } from "../lib/auth.js";
+import { login, signup } from "../lib/auth";
+import { addUserInfo } from "../lib/fireStore";
 export default {
   name: "Authentication",
   data() {
@@ -58,12 +66,14 @@ export default {
       tab: 0,
       form: false,
       email: undefined,
+      userName: undefined,
       password: undefined,
       rules: {
         email: (v) =>
           !!(v || "").match(/@/) || "正しいメールアドレスを入力してください",
         length: (len) => (v) =>
           (v || "").length >= len || `${len}桁以上の長さを設定してください`,
+        required: (v) => !!v || "必須項目です",
       },
       faildMsg: undefined,
     };
@@ -81,19 +91,24 @@ export default {
       if (!res.error) {
         console.log("success");
         this.faildMsg = undefined;
-        this.$store.commit("setAuthInfo", res.authInfo)
+        this.$store.commit("setAuthInfo", res.authInfo);
       } else {
         this.faildMsg = "アカウントの情報が間違っています";
       }
     },
     async signup() {
       this.faildMsg = undefined;
-      const res = await signup(this.email, this.password);
+      const authRes = await signup(this.email, this.userName, this.password);
       console.log("signup");
-      if (!res.error) {
-        console.log("success");
-        this.faildMsg = undefined;
-        this.$store.commit("setAuthInfo", res.authInfo)
+      if (!authRes.error) {
+        const dbRes = await addUserInfo(authRes.authInfo.uid, authRes.authInfo.name);
+        if (!dbRes.error) {
+          console.log("success");
+          this.faildMsg = undefined;
+          this.$store.commit("setAuthInfo", authRes.authInfo);
+        } else {
+          this.faildMsg = "アカウントの登録に失敗しました";
+        }
       } else {
         this.faildMsg = "このメールアドレスは既に使用されています";
       }

@@ -10,7 +10,7 @@ export default new Vuex.Store({
     enemy_status: { cloud: "AWS", HP: 20, condition: null },
     player_status: { cloud: "Azure", HP: 20, condition: null },
     situation: null,
-    authInfo: { uid: null, email: null }
+    authInfo: { uid: null, name: null, email: null }
   },
   mutations: {
     setStart(state) {
