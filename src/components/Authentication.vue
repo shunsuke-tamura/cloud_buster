@@ -58,7 +58,7 @@
 
 <script>
 import { login, signup } from "../lib/auth";
-import { addUserInfo } from "../lib/fireStore";
+import { addUserInfo, getUserInfo } from "../lib/fireStore";
 export default {
   name: "Authentication",
   data() {
@@ -89,9 +89,13 @@ export default {
       const res = await login(this.email, this.password);
       console.log("login");
       if (!res.error) {
+        const userInfo = await getUserInfo(res.authInfo.uid);
         console.log("success");
         this.faildMsg = undefined;
-        this.$store.commit("setAuthInfo", res.authInfo);
+        this.$store.commit("setAuthInfo", {
+          ...res.authInfo,
+          name: userInfo.name,
+        });
       } else {
         this.faildMsg = "アカウントの情報が間違っています";
       }
@@ -101,7 +105,10 @@ export default {
       const authRes = await signup(this.email, this.userName, this.password);
       console.log("signup");
       if (!authRes.error) {
-        const dbRes = await addUserInfo(authRes.authInfo.uid, authRes.authInfo.name);
+        const dbRes = await addUserInfo(
+          authRes.authInfo.uid,
+          authRes.authInfo.name
+        );
         if (!dbRes.error) {
           console.log("success");
           this.faildMsg = undefined;

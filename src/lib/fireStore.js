@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCvQQ1F8SIjbXY3aKtWhlTZq8IZwYBFm2w",
@@ -24,4 +24,9 @@ export const addUserInfo = async (uid, name) => {
     return { error: error };
   });
   return res
+}
+
+export const getUserInfo = async (uid) => {
+  const docSnap = await getDoc(doc(db, "UserInfo", uid));
+  return docSnap.data();
 }
