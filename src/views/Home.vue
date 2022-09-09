@@ -1,6 +1,9 @@
 <template>
   <div id="main-display">
-    <div id="start-window" v-if="!start">
+    <div id="auth-window" v-if="!logined">
+      <authentication></authentication>
+    </div>
+    <div id="start-window" v-else-if="!start">
       <v-btn
         id="start"
         color="primary"
@@ -57,13 +60,15 @@ import axios from "axios"
 import Selection from '../components/Selection.vue'
 import Status from '../components/Status.vue'
 import SystemMsg from '../components/SystemMsg.vue'
+import Authentication from "../components/Authentication.vue"
 export default {
   name: 'Home',
 
   components: {
     Selection,
     Status,
-    SystemMsg
+    SystemMsg,
+    Authentication
   },
   data() {
     return {
@@ -85,6 +90,9 @@ export default {
   computed: {
     situation() {
       return this.$store.state.situation
+    },
+    logined() {
+      return this.$store.state.authInfo.uid !== null && this.$store.state.authInfo.email !== null
     }
   },
   watch: {
@@ -121,6 +129,11 @@ export default {
           await this.wait(0.8)
           this.blue_out = false
         }
+      }
+    },
+    logined(newVal) {
+      if(!newVal) {
+        this.start = false
       }
     }
   },
@@ -166,6 +179,9 @@ export default {
       return new Promise((resolve) => {
         setTimeout(resolve, sec*1000);
       })
+    },
+    auth() {
+      this.logined = true
     }
   }
 }
@@ -175,15 +191,25 @@ export default {
 #main-display {
   display: grid;
   place-items: center;
+  border: 4px solid;
+  margin: 50px auto 0 auto;
+  width: 500px;
+  height: 580px;
+}
+
+#auth-window {
+  width: 100%;
+  height: 100%;
+  padding: 30% 10%;
 }
 
 #start-window {
   display: grid;
   place-items: center;
-  border: 4px solid;
-  margin: 50px auto 0 auto;
-  width: 500px;
-  height: 580px;
+  // border: 4px solid;
+  // margin: 50px auto 0 auto;
+  // width: 500px;
+  // height: 580px;
 }
 #start {
   display: grid;
@@ -206,9 +232,9 @@ export default {
 }
 
 #game-window {
-  border: 4px solid;
-  margin: 50px auto 0 auto;
-  width: 500px;
+  // border: 4px solid;
+  // margin: 50px auto 0 auto;
+  // width: 500px;
   // height: 580px;
   position: relative;
 }
