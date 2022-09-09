@@ -22,19 +22,21 @@ export default {
   },
   methods: {
     make_options() {
+      const playerCloud = this.$store.state.player_status.cloud
       const clouds = ["Azure", "AWS", "GCP", "Heroku"]
       let damage = {Azure: 0, AWS: 0, GCP: 0, Heroku: 0}
       let n = Math.floor(Math.random() * 3) + 1
-      damage.Azure = n
+      damage[playerCloud] = n
       for (let i = 0; i < n; i++) {
-        this.options = this.options.concat([{cloud: "Azure", word: this.$store.state.wordList.Azure[0]}])
-        this.$store.commit("deleteWord", `Azure`)
+        this.options = this.options.concat([{cloud: playerCloud, word: this.$store.state.wordList[playerCloud][0]}])
+        this.$store.commit("deleteWord", playerCloud)
       }
-      for (let i = 0; i < 4 - damage.Azure; i++) {
-        n = Math.floor(Math.random() * 3) + 1
-        damage[clouds[n]] += 1
-        this.options = this.options.concat([{cloud: clouds[n], word: this.$store.state.wordList[clouds[n]][0]}])
-        this.$store.commit("deleteWord", clouds[n])
+      const noPlayerClouds = clouds.filter((item) => item !== playerCloud)
+      for (let i = 0; i < 4 - damage[playerCloud]; i++) {
+        n = Math.floor(Math.random() * 3)
+        damage[noPlayerClouds[n]] += 1
+        this.options = this.options.concat([{cloud: noPlayerClouds[n], word: this.$store.state.wordList[noPlayerClouds[n]][0]}])
+        this.$store.commit("deleteWord", noPlayerClouds[n])
       }
       for (const cloud of clouds) {
         damage[cloud] = (4 - damage[cloud]) % 4

@@ -7,8 +7,8 @@ export default new Vuex.Store({
   state: {
     wordList: null,
     damage: { Azure: 0, AWS: 0, GCP: 0, Heroku: 0 },
-    enemy_status: { cloud: "AWS", HP: 20, condition: null },
-    player_status: { cloud: "Azure", HP: 20, condition: null },
+    enemy_status: { cloud: null, HP: 20, condition: null },
+    player_status: { cloud: null, HP: 20, condition: null },
     situation: null,
     userInfo: { uid: null, name: null, email: null, cloud: null }
   },
@@ -40,20 +40,20 @@ export default new Vuex.Store({
       state.damage = damage
     },
     attack(state, cloud) {
-      if (cloud == state.enemy_status.cloud) {
+      if (cloud === state.enemy_status.cloud) {
         state.enemy_status.HP = (state.enemy_status.HP + state.damage[cloud])
         if (state.enemy_status.HP > 20) {
           state.enemy_status.HP = 20
         }
         state.situation = "attack faild" + state.damage[cloud]
       }
-      else if (cloud == "Azure") {
-        state.enemy_status.HP -= state.damage["Azure"]
-        if (state.damage["Azure"] == 3) {
+      else if (cloud === state.player_status.cloud) {
+        state.enemy_status.HP -= state.damage[state.player_status.cloud]
+        if (state.damage[state.player_status.cloud] == 3) {
           state.situation = "attack perfect"
         }
         else {
-          state.situation = "attack success" + state.damage["Azure"]
+          state.situation = "attack success" + state.damage[state.player_status.cloud]
         }
         if (state.enemy_status.HP < 0) {
           state.enemy_status.HP = 0
