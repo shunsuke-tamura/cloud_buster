@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { addCloudValueChange } from '../lib/fireStore';
+
 export default {
   name: "SystemMsg",
   data() {
@@ -41,7 +43,9 @@ export default {
           return `${cloud}からの反撃！\n${damage}ダメージを受けた！`;
         }
       } else if (situation == "win") {
+        console.log("updateDB");
         const add = Math.floor(Math.random() * 100000) + 1;
+        this.updateDB("Azure", cloud, add)
         return `${cloud}との勝負に勝利した!\nAzureユーザーを${add}人増やした！`;
       } else if (situation == "lose") {
         return `${cloud}に敗北した...\n目の前が真っ青になった`;
@@ -50,6 +54,11 @@ export default {
       }
     },
   },
+  methods: {
+    async updateDB(to, from, value) {
+      await addCloudValueChange(to, from, value, this.$store.state.userInfo)
+    }
+  }
 };
 </script>
 
