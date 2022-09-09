@@ -25,7 +25,7 @@
         <p class="enemy__img">
           <img
             v-bind:class="{ blinking: enemy_injured, bottom_out: enemy_lose }"
-            :src="require(`@/assets/${enemy}.png`)"
+            :src="require(`@/assets/${enemy}_enemy.png`)"
             :alt="enemy"
             :title="enemy"
           />
@@ -40,7 +40,7 @@
         <img
           id="player"
           v-bind:class="{ blinking: player_injured, bottom_out: player_lose }"
-          :src="require(`@/assets/${player}.png`)"
+          :src="require(`@/assets/${player}_player.png`)"
           :alt="player"
           :title="player"
         />
@@ -173,7 +173,7 @@ export default {
       // const wordList = res.data.data;
       const wordList = debugData
       this.$store.commit("setWordList", wordList);
-      this.$store.commit("setStart", "Azure");
+      this.$store.commit("setStart");
       this.isLoading = false;
       this.start = true;
       this.end = false;
