@@ -3,7 +3,10 @@
     <div id="auth-window" v-if="!logined">
       <authentication></authentication>
     </div>
-    <div id="start-window" v-else-if="!start">
+    <div id="user-info" v-else>
+      <UserInfo></UserInfo>
+    </div>
+    <div id="start-window" v-if="logined && !start">
       <v-btn
         id="start"
         color="primary"
@@ -15,7 +18,7 @@
         start
       </v-btn>
     </div>
-    <div id="game-window" v-else>
+    <div id="game-window" v-if="logined && start">
       <div class="battle-start" v-if="!blackout_end"></div>
       <!-- 陣内エディション -->
       <div class="enemy --left-in">
@@ -72,6 +75,7 @@ import Selection from "../components/Selection.vue";
 import Status from "../components/Status.vue";
 import SystemMsg from "../components/SystemMsg.vue";
 import Authentication from "../components/Authentication.vue";
+import UserInfo from "../components/UserInfo.vue";
 export default {
   name: "Home",
 
@@ -80,6 +84,7 @@ export default {
     Status,
     SystemMsg,
     Authentication,
+    UserInfo
   },
   data() {
     return {
@@ -104,8 +109,8 @@ export default {
     },
     logined() {
       return (
-        this.$store.state.authInfo.uid !== null &&
-        this.$store.state.authInfo.email !== null
+        this.$store.state.userInfo.uid !== null &&
+        this.$store.state.userInfo.email !== null
       );
     },
   },
@@ -204,17 +209,28 @@ export default {
 <style lang="scss">
 #main-display {
   display: grid;
+  grid-template-rows: 40px 500px;
   place-items: center;
   border: 4px solid;
   margin: 50px auto 0 auto;
   width: 500px;
-  height: 580px;
+  height: 620px;
 }
 
 #auth-window {
   width: 100%;
   height: 100%;
-  padding: 30% 10%;
+  grid-row: 2;
+  padding: 20% 10%;
+}
+
+#user-info {
+  display: flex;
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  justify-content: end;
+  align-items: center;
 }
 
 #start-window {

@@ -92,7 +92,7 @@ export default {
         const userInfo = await getUserInfo(res.authInfo.uid);
         console.log("success");
         this.faildMsg = undefined;
-        this.$store.commit("setAuthInfo", {
+        this.$store.commit("setUserInfo", {
           ...res.authInfo,
           name: userInfo.name,
         });
@@ -112,7 +112,7 @@ export default {
         if (!dbRes.error) {
           console.log("success");
           this.faildMsg = undefined;
-          this.$store.commit("setAuthInfo", authRes.authInfo);
+          this.$store.commit("setUserInfo", authRes.authInfo);
         } else {
           this.faildMsg = "アカウントの登録に失敗しました";
         }

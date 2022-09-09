@@ -10,7 +10,7 @@ export default new Vuex.Store({
     enemy_status: { cloud: "AWS", HP: 20, condition: null },
     player_status: { cloud: "Azure", HP: 20, condition: null },
     situation: null,
-    authInfo: { uid: null, name: null, email: null }
+    userInfo: { uid: null, name: null, email: null }
   },
   mutations: {
     setStart(state) {
@@ -82,8 +82,11 @@ export default new Vuex.Store({
         state.situation = "counter" + "10"
       }
     },
-    setAuthInfo(state, authInfo) {
-      state.authInfo = authInfo
+    setUserInfo(state, authInfo) {
+      state.userInfo = authInfo
+    },
+    logout(state) {
+      state.userInfo = { uid: null, name: null, email: null }
     }
   },
   actions: {
