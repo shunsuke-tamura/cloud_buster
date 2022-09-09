@@ -23,7 +23,7 @@ export default {
         return `共に競い合う中でもあるけど、何かと比較されるのが若干鼻につくから倒したい"${cloud}"に勝負を仕掛けた`;
       } else if (situation.indexOf("attack faild") > -1) {
         const recovery = situation.replace("attack faild", "");
-        return `相手の特性"${cloud}ボディー"によってAzureの攻撃を吸収された！\n相手の体力が${recovery}回復した`;
+        return `特性"${cloud}ボディー"によってAzureの攻撃を吸収された！\n相手の体力が${recovery}回復した`;
       } else if (situation == "attack perfect") {
         this.bigdamage_se.play();
         return `Azureの攻撃が${cloud}のセキュリティホールにあたった！\n${cloud}に3ダメージ！`;

@@ -235,7 +235,7 @@ export default {
 #user-info {
   display: flex;
   width: 100%;
-  height: 40px;
+  height: 100%;
   padding: 0 10px;
   justify-content: end;
   align-items: center;
@@ -272,9 +272,8 @@ export default {
 #game-window {
   // border: 4px solid;
   // margin: 50px auto 0 auto;
-  // width: 500px;
-  // height: 580px;
-  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .enemy {
