@@ -13,9 +13,12 @@ export default new Vuex.Store({
     userInfo: { uid: null, name: null, email: null }
   },
   mutations: {
-    setStart(state) {
-      state.enemy_status = { cloud: "AWS", HP: 20, condition: null }
-      state.player_status = { cloud: "Azure", HP: 20, condition: null }
+    setStart(state, playerCloud) {
+      const allCloud = ["Azure", "AWS", "GCP", "Heroku"]
+      const candidateCloud = allCloud.filter(item=> item !== playerCloud);
+      const enemyCloud = candidateCloud[Math.floor(Math.random() * 3)];
+      state.enemy_status = { cloud: enemyCloud, HP: 20, condition: null }
+      state.player_status = { cloud: playerCloud, HP: 20, condition: null }
       state.situation = "start"
     },
     setEnd(state, loser) {

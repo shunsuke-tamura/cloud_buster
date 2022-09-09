@@ -25,9 +25,9 @@
         <p class="enemy__img">
           <img
             v-bind:class="{ blinking: enemy_injured, bottom_out: enemy_lose }"
-            src="../assets/aws.jpg"
-            alt="aws"
-            title="aws"
+            :src="require(`@/assets/${enemy}.png`)"
+            :alt="enemy"
+            :title="enemy"
           />
         </p>
         <div class="enemy__status">
@@ -40,9 +40,9 @@
         <img
           id="player"
           v-bind:class="{ blinking: player_injured, bottom_out: player_lose }"
-          src="../assets/azure.jpg"
-          alt="azure"
-          title="azure"
+          :src="require(`@/assets/${player}.png`)"
+          :alt="player"
+          :title="player"
         />
         <div id="player-status">
           <status :side="'player'" />
@@ -114,6 +114,12 @@ export default {
         this.$store.state.userInfo.email !== null
       );
     },
+    player() {
+      return this.$store.state.player_status.cloud
+    },
+    enemy() {
+      return this.$store.state.enemy_status.cloud
+    }
   },
   watch: {
     async situation() {
@@ -167,7 +173,7 @@ export default {
       // const wordList = res.data.data;
       const wordList = debugData
       this.$store.commit("setWordList", wordList);
-      this.$store.commit("setStart");
+      this.$store.commit("setStart", "Azure");
       this.isLoading = false;
       this.start = true;
       this.end = false;
