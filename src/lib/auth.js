@@ -11,19 +11,27 @@ const firebaseConfig = {
   projectId: "cloud-buster-cc6a7",
   storageBucket: "cloud-buster-cc6a7.appspot.com",
   messagingSenderId: "27958890895",
-  appId: "1:27958890895:web:a1f7c065f3fc0179afbbfa"
+  appId: "1:27958890895:web:a1f7c065f3fc0179afbbfa",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export const signup = async (email, userName, password) => {
+export const signup = async (email, userName, password, cloud) => {
   const res = await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      return { error: undefined, authInfo: { uid: user.uid, name: userName, email: user.email } };
+      return {
+        error: undefined,
+        authInfo: {
+          uid: user.uid,
+          name: userName,
+          email: user.email,
+          cloud: cloud,
+        },
+      };
     })
     .catch((error) => {
       console.log(error);
@@ -37,7 +45,10 @@ export const login = async (email, password) => {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      return { error: undefined, authInfo: { uid: user.uid, email: user.email } };
+      return {
+        error: undefined,
+        authInfo: { uid: user.uid, email: user.email },
+      };
     })
     .catch((error) => {
       console.log(error);

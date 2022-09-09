@@ -10,10 +10,11 @@ export default new Vuex.Store({
     enemy_status: { cloud: "AWS", HP: 20, condition: null },
     player_status: { cloud: "Azure", HP: 20, condition: null },
     situation: null,
-    userInfo: { uid: null, name: null, email: null }
+    userInfo: { uid: null, name: null, email: null, cloud: null }
   },
   mutations: {
-    setStart(state, playerCloud) {
+    setStart(state) {
+      const playerCloud = state.userInfo.cloud
       const allCloud = ["Azure", "AWS", "GCP", "Heroku"]
       const candidateCloud = allCloud.filter(item=> item !== playerCloud);
       const enemyCloud = candidateCloud[Math.floor(Math.random() * 3)];

@@ -26,9 +26,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export const addUserInfo = async (uid, name) => {
+export const addUserInfo = async (uid, name, cloud) => {
   const res = await setDoc(doc(db, "UserInfo", uid), {
     name: name,
+    cloud: cloud
   })
     .then(() => {
       return { error: undefined };

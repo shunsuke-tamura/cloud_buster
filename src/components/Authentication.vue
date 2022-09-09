@@ -25,6 +25,14 @@
         type="password"
         prepend-icon="mdi-lock"
       ></v-text-field>
+      <v-select
+        v-if="tab === 1"
+        v-model="selectedCloud"
+        :items="clouds"
+        :rules="[rules.required]"
+        label="My Cloud"
+        prepend-icon="mdi-cloud "
+      ></v-select>
     </v-form>
     <v-row justify="center">
       <div id="faild-msg">
@@ -76,12 +84,14 @@ export default {
         required: (v) => !!v || "必須項目です",
       },
       faildMsg: undefined,
+      selectedCloud: undefined,
+      clouds: ["Azure", "AWS", "GCP", "Heroku"],
     };
   },
   watch: {
     tab() {
       this.faildMsg = undefined;
-    },
+    }
   },
   methods: {
     async login() {
@@ -95,6 +105,7 @@ export default {
         this.$store.commit("setUserInfo", {
           ...res.authInfo,
           name: userInfo.name,
+          cloud: userInfo.cloud,
         });
       } else {
         this.faildMsg = "アカウントの情報が間違っています";
@@ -102,12 +113,18 @@ export default {
     },
     async signup() {
       this.faildMsg = undefined;
-      const authRes = await signup(this.email, this.userName, this.password);
+      const authRes = await signup(
+        this.email,
+        this.userName,
+        this.password,
+        this.selectedCloud
+      );
       console.log("signup");
       if (!authRes.error) {
         const dbRes = await addUserInfo(
           authRes.authInfo.uid,
-          authRes.authInfo.name
+          authRes.authInfo.name,
+          authRes.authInfo.cloud
         );
         if (!dbRes.error) {
           console.log("success");
