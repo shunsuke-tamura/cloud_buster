@@ -29,7 +29,7 @@ const db = getFirestore(app);
 export const addUserInfo = async (uid, name, cloud) => {
   const res = await setDoc(doc(db, "UserInfo", uid), {
     name: name,
-    cloud: cloud
+    cloud: cloud,
   })
     .then(() => {
       return { error: undefined };
@@ -80,4 +80,52 @@ export const addCloudValueChange = async (to, from, value, userInfo) => {
       uname: userInfo.name,
     });
   }
+};
+
+const findChangeSum = (docSnap, cloud) => {
+  let changeSum = [];
+  docSnap.docs.forEach((doc) => {
+    const idx = changeSum.findIndex(
+      (element) => element.uid === doc.data().uid
+    );
+    if (idx !== -1) {
+      changeSum[idx].change += doc.data().change;
+    } else {
+      changeSum = [
+        ...changeSum,
+        {
+          cloud: cloud,
+          uid: doc.data().uid,
+          change: doc.data().change,
+          name: doc.data().uname,
+        },
+      ];
+    }
+  });
+  return changeSum.sort((a, b) => {
+    return a.change > b.change ? -1 : 1;
+  });
+};
+
+export const getCloudContributionLanking = async () => {
+  const cloudList = ["Azure", "AWS", "GCP", "Heroku"];
+  let changeSumList = {};
+  for (let cloud of cloudList) {
+    const docRef = collection(db, cloud);
+    const docSnap = await getDocs(docRef);
+    changeSumList = {
+      ...changeSumList,
+      [cloud]: findChangeSum(docSnap, cloud),
+    };
+  }
+  const allList = [
+    ...changeSumList["Azure"],
+    ...changeSumList["AWS"],
+    ...changeSumList["GCP"],
+    ...changeSumList["Heroku"],
+  ];
+  changeSumList = {...changeSumList, all: allList.sort((a, b) => {
+    return a.change > b.change ? -1 : 1;
+  })}
+  return changeSumList;
 };

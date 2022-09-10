@@ -6,7 +6,17 @@
     <div id="user-info" v-else>
       <UserInfo></UserInfo>
     </div>
-    <div id="start-window" v-if="logined && !start">
+    <div id="start-window" v-if="logined && !start && !showLanking">
+      <v-btn
+        id="lanking-btn"
+        color="primary"
+        elevation="15"
+        x-large
+        :loading="isLoading"
+        @click="openLanking"
+      >
+        lankign
+      </v-btn>
       <v-btn
         id="start"
         color="primary"
@@ -18,6 +28,13 @@
         start
       </v-btn>
     </div>
+    <lanking
+      id="lanking-window"
+      v-if="logined && !start && showLanking"
+      :data="lankingData"
+      @close-lanking="closeLanking"
+    >
+    </lanking>
     <div id="game-window" v-if="logined && start">
       <div class="battle-start" v-if="!blackout_end"></div>
       <!-- 陣内エディション -->
@@ -75,7 +92,9 @@ import Selection from "../components/Selection.vue";
 import Status from "../components/Status.vue";
 import SystemMsg from "../components/SystemMsg.vue";
 import Authentication from "../components/Authentication.vue";
+import Lanking from "../components/Lanking.vue";
 import UserInfo from "../components/UserInfo.vue";
+import { getCloudContributionLanking } from "../lib/fireStore";
 import { debugData } from "../../z-debug";
 export default {
   name: "Home",
@@ -85,13 +104,16 @@ export default {
     Status,
     SystemMsg,
     Authentication,
-    UserInfo
+    UserInfo,
+    Lanking,
   },
   data() {
     return {
       start: false,
       end: false,
       isLoading: false,
+      showLanking: false,
+      lankingData: undefined,
       enemy_injured: false,
       enemy_lose: false,
       player_injured: false,
@@ -115,11 +137,11 @@ export default {
       );
     },
     player() {
-      return this.$store.state.player_status.cloud
+      return this.$store.state.player_status.cloud;
     },
     enemy() {
-      return this.$store.state.enemy_status.cloud
-    }
+      return this.$store.state.enemy_status.cloud;
+    },
   },
   watch: {
     async situation() {
@@ -160,6 +182,7 @@ export default {
     logined(newVal) {
       if (!newVal) {
         this.start = false;
+        this.showLanking = false;
       }
     },
   },
@@ -171,7 +194,7 @@ export default {
       //   "https://tatakimaru.azurewebsites.net/getWordList"
       // );
       // const wordList = res.data.data;
-      const wordList = debugData
+      const wordList = debugData;
       this.$store.commit("setWordList", wordList);
       this.$store.commit("setStart");
       this.isLoading = false;
@@ -210,6 +233,13 @@ export default {
     auth() {
       this.logined = true;
     },
+    async openLanking() {
+      this.showLanking = true;
+      this.lankingData = await getCloudContributionLanking();
+    },
+    closeLanking() {
+      this.showLanking = false;
+    },
   },
 };
 </script>
@@ -239,6 +269,14 @@ export default {
   padding: 0 10px;
   justify-content: end;
   align-items: center;
+}
+#lanking-window {
+  width: 100%;
+  height: 100%;
+}
+
+#lanking-btn {
+  margin-bottom: 15px;
 }
 
 #start-window {
