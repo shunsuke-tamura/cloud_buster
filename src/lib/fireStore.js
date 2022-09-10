@@ -85,21 +85,23 @@ export const addCloudValueChange = async (to, from, value, userInfo) => {
 const findChangeSum = (docSnap, cloud) => {
   let changeSum = [];
   docSnap.docs.forEach((doc) => {
-    const idx = changeSum.findIndex(
-      (element) => element.uid === doc.data().uid
-    );
-    if (idx !== -1) {
-      changeSum[idx].change += doc.data().change;
-    } else {
-      changeSum = [
-        ...changeSum,
-        {
-          cloud: cloud,
-          uid: doc.data().uid,
-          change: doc.data().change,
-          name: doc.data().uname,
-        },
-      ];
+    if (doc.data().uid !== "bmgvj5x0uxbyUNiPT4k3WbQ2gxA3" && doc.data().change > 0) {
+      const idx = changeSum.findIndex(
+        (element) => element.uid === doc.data().uid
+      );
+      if (idx !== -1) {
+        changeSum[idx].change += doc.data().change;
+      } else {
+        changeSum = [
+          ...changeSum,
+          {
+            cloud: cloud,
+            uid: doc.data().uid,
+            change: doc.data().change,
+            name: doc.data().uname,
+          },
+        ];
+      }
     }
   });
   return changeSum.sort((a, b) => {
