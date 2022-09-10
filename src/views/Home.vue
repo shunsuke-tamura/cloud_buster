@@ -12,7 +12,6 @@
         color="primary"
         elevation="15"
         x-large
-        :loading="isLoading"
         @click="openLanking"
       >
         lankign
@@ -87,7 +86,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 import Selection from "../components/Selection.vue";
 import Status from "../components/Status.vue";
 import SystemMsg from "../components/SystemMsg.vue";
@@ -95,7 +94,7 @@ import Authentication from "../components/Authentication.vue";
 import Lanking from "../components/Lanking.vue";
 import UserInfo from "../components/UserInfo.vue";
 import { getCloudContributionLanking } from "../lib/fireStore";
-import { debugData } from "../../z-debug";
+// import { debugData } from "../../z-debug";
 export default {
   name: "Home",
 
@@ -189,12 +188,12 @@ export default {
   methods: {
     async click_start() {
       this.isLoading = true;
-      // axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
-      // const res = await axios(
-      //   "https://tatakimaru.azurewebsites.net/getWordList"
-      // );
-      // const wordList = res.data.data;
-      const wordList = debugData;
+      axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
+      const res = await axios(
+        "https://tatakimaru.azurewebsites.net/getWordList"
+      );
+      const wordList = res.data.data;
+      // const wordList = debugData;
       this.$store.commit("setWordList", wordList);
       this.$store.commit("setStart");
       this.isLoading = false;
