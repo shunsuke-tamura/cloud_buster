@@ -9,7 +9,7 @@
     <div id="start-window" v-if="logined && !start && !showLanking">
       <v-btn
         id="lanking-btn"
-        color="primary"
+        color="teal"
         elevation="15"
         x-large
         @click="openLanking"
